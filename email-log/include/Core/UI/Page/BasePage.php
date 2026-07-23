@@ -69,10 +69,11 @@ abstract class BasePage implements Loadie {
     function sidebar(){
         echo '<div class="sidebar-box pro-ad-box">
             <p class="text-center"><a href="#" data-pro-feature="sidebar-box-logo" class="open-pro-dialog sidebar-box-logo">
-            <img src="' . esc_url(EMAIL_LOG_URL . 'assets/img/logo-64x64.png') . '" alt="Email Log PRO" title="Email Log PRO"> Email Log</a><br><b>PRO version is here!</b></p>
+            <img src="' . esc_url(EMAIL_LOG_URL . 'assets/img/logo-64x64.png') . '" alt="Email Log PRO" title="Email Log PRO"> Email Log PRO</a><br><b>Get more done for only $9.99!</b></p>
             <ul class="plain-list">
                 <li>Detailed Email Log</li>
-                <li>24/7 Monitoring</li>
+                <li>24/7 Monitoring from our SaaS</li>
+                <li>Instant Notifications When Your Emails Stop Working</li>
                 <li>Auto Forward</li>
                 <li>Resend Emails</li>
                 <li>Licenses &amp; Sites Manager (remote SaaS dashboard)</li>
@@ -81,7 +82,7 @@ abstract class BasePage implements Loadie {
                 <li>Email Support From Plugin Developers</li>
             </ul>
 
-            <p class="text-center"><a href="#" class="open-pro-dialog button button-buy" data-pro-feature="sidebar-box-btn">Get a license Now</a></p>
+            <p class="text-center"><a href="#" class="open-pro-dialog button button-buy" data-pro-feature="sidebar-box-btn">Get PRO Now</a></p>
             </div>';
 
     if (!defined('EPS_REDIRECT_VERSION') && !defined('WF301_PLUGIN_FILE')) {
@@ -177,12 +178,14 @@ abstract class BasePage implements Loadie {
         </tr>
 
         <tr>
-        <td><a class="button button-buy" data-href-org="https://wpemaillog.com/buy/?product=personal-yearly&ref=pricing-table" href="https://wpemaillog.com/buy/?product=personal-yearly&ref=pricing-table" target="_blank">BUY NOW</a><br>- or -<br><a target="_blank" class="button-buy" href="https://wpemaillog.com/buy/?product=personal-ltd-launch&ref=pricing-table" data-href-org="https://wpemaillog.com/buy/?product=personal-ltd-launch&ref=pricing-table">Only <del>$159</del> $89 for a lifetime license</a></td>
+        <td><a class="button button-buy" data-href-org="https://wpemaillog.com/buy/?product=personal-yearly&ref=pricing-table" href="https://wpemaillog.com/buy/?product=personal-yearly&ref=pricing-table" target="_blank">BUY NOW</a><br>or <a target="_blank" class="button-buy" href="https://wpemaillog.com/buy/?product=personal-ltd-launch&ref=pricing-table" data-href-org="https://wpemaillog.com/buy/?product=personal-ltd-launch&ref=pricing-table">only <del>$159</del> $89 for a lifetime license</a></td>
         <td><a class="button button-buy" data-href-org="https://wpemaillog.com/buy/?product=team-yearly&ref=pricing-table" href="https://wpemaillog.com/buy/?product=team-yearly&ref=pricing-table" target="_blank">BUY NOW</a></td>
         <td><a class="button button-buy" data-href-org="https://wpemaillog.com/buy/?product=agency-yearly&ref=pricing-table" href="https://wpemaillog.com/buy/?product=agency-yearly&ref=pricing-table" target="_blank">BUY NOW</a></td>
         </tr>
 
         </table>
+
+        <div class="upsell-footer-2 center">Need the plugin only for a <b>short period of time</b>? <a class="button-buy" target="_blank" data-href-org="https://wpemaillog.com/buy/?product=personal-monthly&ref=pricing-table" href="https://wpemaillog.com/buy/?product=personal-monthly&ref=pricing-table"><b>Get it for ONLY $9.99</b><small> /month</small></a> &amp; cancel any time!</div>
 
         <div class="center footer"><b>100% No-Risk Money Back Guarantee!</b> If you don\'t like the plugin over the next 7 days, we will happily refund 100% of your money. No questions asked! Payments are processed by our merchant of records - <a href="https://paddle.com/" target="_blank">Paddle</a>.</div>';
     }

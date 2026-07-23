@@ -71,18 +71,19 @@
 
     $('#emaillog-pro-dialog').dialog('open');
 
-    $('#emaillog-pro-table .button-buy').each(function (ind, el) {
+    $('#emaillog-pro-dialog .button-buy').each(function (ind, el) {
       tmp = $(el).data('href-org');
       tmp = tmp.replace('pricing-table', feature);
       $(el).attr('href', tmp);
     });
   } // open_upsell
 
-  if (window.localStorage.getItem('emaillog_upsell_shown') != 'true') {
-    open_upsell('welcome');
+  // show upsell popup every 3 months
+  if (window.localStorage.getItem('emaillog_upsell_timestamp') === null ||
+      (new Date().getTime() / 1000 - window.localStorage.getItem('emaillog_upsell_timestamp')) > (86400 * 90)) {
+    window.localStorage.setItem('emaillog_upsell_timestamp', Math.round(new Date().getTime() / 1000));
 
-    window.localStorage.setItem('emaillog_upsell_shown', 'true');
-    window.localStorage.setItem('emaillog_upsell_shown_timestamp', new Date().getTime());
+    open_upsell('welcome');
   }
 
   if (window.location.hash == '#open-pro-dialog') {
