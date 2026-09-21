@@ -286,61 +286,78 @@ class Email_Log_List_Table extends WP_List_Table {
 		}
 	}
 
-	/**
-	 * Prepare data for display.
-	 */
-	public function prepare_items() {
-		global $wpdb;
+    public function prepare_items() {
 
-		$table_name = $wpdb->prefix . EmailLog::TABLE_NAME;
-		$this->_column_headers = $this->get_column_info();
+        global $wpdb;
 
-		// Handle bulk actions.
-		$this->process_bulk_action();
+        $table_name = $wpdb->prefix . EmailLog::TABLE_NAME;
 
-		// Get current page number.
-		$current_page = $this->get_pagenum();
+        $this->_column_headers = $this->get_column_info();
 
-		$query = 'SELECT * FROM ' . $table_name;
-		$count_query = 'SELECT count(*) FROM ' . $table_name;
-		$query_cond = '';
+        // Handle bulk actions.
+        $this->process_bulk_action();
 
-        //nonce not needed as can be linked directly
-		if ( isset( $_GET['s'] ) ) { //phpcs:ignore
-			$search_term = trim( esc_sql( wp_unslash($_GET['s']) ) ); //phpcs:ignore
-			$query_cond .= " WHERE to_email LIKE '%$search_term%' OR subject LIKE '%$search_term%' ";
-		}
+        $current_page = $this->get_pagenum();
+        $per_page     = EmailLog::get_per_page();
 
-		// Ordering parameters.
-		$orderby = ! empty( $_GET['orderby'] ) ? esc_sql( $_GET['orderby'] ) : 'sent_date'; //phpcs:ignore 
-		$order   = ! empty( $_GET['order'] ) ? esc_sql( $_GET['order'] ) : 'DESC'; //phpcs:ignore
+        // Search
 
-		if ( ! empty( $orderby ) & ! empty( $order ) ) {
-			$query_cond .= ' ORDER BY ' . $orderby . ' ' . $order;
-		}
+        $where = '';
 
-		// Find total number of items.
-		$count_query = $count_query . $query_cond;
-		$total_items = $wpdb->get_var( $count_query ); //phpcs:ignore
+        if ( isset( $_GET['s'] ) && '' !== $_GET['s'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            $search_term = sanitize_text_field(
+                wp_unslash( $_GET['s'] ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            );
 
-		// Adjust the query to take pagination into account.
-		$per_page = EmailLog::get_per_page();
-		if ( ! empty( $current_page ) && ! empty( $per_page ) ) {
-			$offset = ( $current_page - 1 ) * $per_page;
-			$query_cond .= ' LIMIT ' . (int) $offset . ',' . (int) $per_page;
-		}
+            $like = '%' . $wpdb->esc_like( $search_term ) . '%';
 
-		// Fetch the items.
-		$query = $query . $query_cond;
-		$this->items = $wpdb->get_results( $query ); //phpcs:ignore
+            $where = $wpdb->prepare(
+                ' WHERE to_email LIKE %s OR subject LIKE %s',
+                $like,
+                $like
+            );
+        }
 
-		// Register pagination options & calculations.
-		$this->set_pagination_args( array(
-			'total_items' => $total_items,
-			'per_page'    => $per_page,
-			'total_pages' => ceil( $total_items / $per_page ),
-		) );
-	}
+        // Ordering 
+        $allowed_orderby = array(
+            'to',
+            'subject',
+            'sent_date',
+        );
+
+        $orderby = isset( $_GET['orderby'] ) ? sanitize_key( wp_unslash( $_GET['orderby'] ) ) : 'sent_date'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+        if ( ! in_array( $orderby, $allowed_orderby, true ) ) {
+            $orderby = 'sent_date';
+        }
+
+        $order = isset( $_GET['order'] ) && 'asc' === sanitize_key( wp_unslash( $_GET['order'] ) ) ? 'ASC' : 'DESC'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+        $count_query = 'SELECT COUNT(*) FROM ' . $table_name . $where;
+
+        $total_items = (int) $wpdb->get_var( $count_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+
+        // Fetch page.
+        
+        $offset = ( $current_page - 1 ) * $per_page;
+
+        $query = 'SELECT * FROM ' . $table_name
+            . $where
+            . ' ORDER BY ' . $orderby . ' ' . $order
+            . ' LIMIT ' . (int) $offset . ', ' . (int) $per_page;
+
+        $this->items = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+
+        // Pagination.
+        
+        $this->set_pagination_args(
+            array(
+                'total_items' => $total_items,
+                'per_page'    => $per_page,
+                'total_pages' => ceil( $total_items / $per_page ),
+            )
+        );
+    }
 
 	/**
 	 * Displays default message when no items are found.

@@ -4,12 +4,12 @@
  * Plugin URI: https://wpemaillog.com/
  * Description: Logs every email sent through WordPress
  * Author: WebFactory Ltd
- * Version: 2.63
+ * Version: 2.64
  * Author URI: https://www.webfactoryltd.com/
  * Text Domain: email-log
  * License: GPLv2 or later
  * Requires at least: 4.0
- * Tested up to: 7.0
+ * Tested up to: 7.1
  * Requires PHP: 5.6
  */
 
